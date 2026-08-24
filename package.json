@@ -1,6 +1,6 @@
 {
     "name":  "@mkaliezz/dsh-task-board",
-    "version": "0.2.2",
+    "version":  "0.3.0",
     "type":  "module",
     "private":  false,
     "description":  "DSH plugin: dsh-evidence-task-board (npm package: @mkaliezz/dsh-task-board)",
@@ -27,7 +27,8 @@
                  ],
     "devDependencies":  {
                             "@types/node":  "22.10.0",
-                            "typescript":  "5.8.3"
+                            "typescript":  "5.8.3",
+                            "@deepseek-ai/dsh-goal":  "^0.1.1-rc.2"
                         },
     "publishConfig":  {
                           "access":  "public"
@@ -40,5 +41,8 @@
                 "bundle":  {
                                "patch":  "./cordis.patch.yml"
                            }
-            }
+            },
+    "peerDependencies":  {
+
+                         }
 }
