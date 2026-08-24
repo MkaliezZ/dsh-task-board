@@ -1,6 +1,6 @@
 {
     "name":  "@mkaliezz/dsh-task-board",
-    "version":  "0.2.1",
+    "version": "0.2.2",
     "type":  "module",
     "private":  false,
     "description":  "DSH plugin: dsh-evidence-task-board (npm package: @mkaliezz/dsh-task-board)",
