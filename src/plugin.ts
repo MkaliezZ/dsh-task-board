@@ -1,11 +1,19 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { decodeGoalChange } from '@deepseek-ai/dsh-goal'
 import { applyTaskCommand, normalizeBoard, renderBoard, type TaskBoard, type TaskStatus } from './core.js'
+import { applyGoalChangeMeta, type GoalBridgeState } from './goal-bridge.js'
 
 export const name = 'task-board'
 export const inject = ['commands']
 
-export interface Config { storagePath?: string }
+export interface Config {
+  storagePath?: string
+  integrations?: {
+    /** Mirror the session goal lifecycle onto the board (default true). */
+    goal?: boolean
+  }
+}
 
 function fileStorage(storagePath: string) {
   return {
@@ -26,6 +34,20 @@ function fileStorage(storagePath: string) {
 export function apply(ctx: any, config: Config = {}): void {
   const storagePath = config.storagePath ?? path.join(process.cwd(), 'dsh-task-board.json')
   const storage = fileStorage(storagePath)
+
+  if (config.integrations?.goal !== false) {
+    const goalStates = new Map<string, GoalBridgeState>()
+    let queue: Promise<unknown> = Promise.resolve()
+    ctx.on('session/event', (_session: unknown, event: { type: string; data: unknown }) => {
+      if (event.type !== 'goal/change') return
+      const change = decodeGoalChange(event.data)
+      if (!change) return
+      queue = queue.then(async () => {
+        const board = applyGoalChangeMeta(await storage.load(), change, goalStates)
+        await storage.save(board)
+      }).catch(() => { /* listener failures stay contained */ })
+    })
+  }
 
   ctx.commands.register({
     name: 'task-board',
