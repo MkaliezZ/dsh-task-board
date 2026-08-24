@@ -1,3 +1,4 @@
-- id: dsh-evidence-task-board
-  name: '@mkaliezz/dsh-task-board'
-  config: {}
+- insert:
+    - id: dsh-evidence-task-board
+      name: '@mkaliezz/dsh-task-board'
+      config: {}
