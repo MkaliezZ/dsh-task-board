@@ -8,7 +8,10 @@ type Handler = (invocation: { rawInput?: string }) => Promise<{ kind: string; te
 
 function capture(config: unknown = {}) {
   const commands: Record<string, Handler> = {}
-  apply({ commands: { register: (d: { name: string; handler: Handler }) => { commands[d.name] = d.handler } } } as never, config as never)
+  apply({
+    commands: { register: (d: { name: string; handler: Handler }) => { commands[d.name] = d.handler } },
+    on: () => () => {},
+  } as never, config as never)
   return commands
 }
 
